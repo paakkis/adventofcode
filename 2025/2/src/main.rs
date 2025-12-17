@@ -23,17 +23,25 @@ fn main() {
             // println!("n = {}", n);
             let s = n.to_string();
             let len = s.len();
-            if len % 2 != 0 {
-                continue;
-            }
-            let middle = len / 2;
-            let left: String = s[..middle].parse().ok().unwrap();
-            let right: String = s[middle..].parse().ok().unwrap();
+            for k in 2..=len {
+                if len % k != 0 {
+                    continue;
+                }
 
-            // println!("Left = {}, Right {}", left, right);
+                let chunk_size = len / k;
 
-            if left == right {
-                total = total + n;
+                let parts: Vec<&str> = s
+                    .as_bytes()
+                    .chunks(chunk_size)
+                    .map(|c| std::str::from_utf8(c).unwrap())
+                    .collect();
+
+                let first = parts[0];
+                if parts.iter().all(|&item| item == first) {
+                    println!("Found = {}", n);
+                    total = total + n;
+                    break;
+                }
             }
         }
     }
